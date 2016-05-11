@@ -1,0 +1,68 @@
+// ----------------------------------------------------------------------------
+// Sass declarations
+// ----------------------------------------------------------------------------
+$background-color:  #FFF;
+$foreground-color:  #303030;
+
+$title-color:       #000000;
+$moreinfo-color:    #000000;
+
+// ----------------------------------------------------------------------------
+// Widget-comment styles
+// ----------------------------------------------------------------------------
+.widget-facebook-posts {
+  padding: 4px;
+  height: 100%;
+  width: 100%;
+  background-color: $background-color;
+  color: $foreground-color;
+
+  h3 {
+    color: $foreground-color;
+  }
+
+  .title {
+    color: $title-color;
+    margin-bottom: 15px;
+    margin-top: 0;
+  }
+
+  .name {
+    padding-left: 5px;
+  }
+
+  .comment-container {
+    display: none;
+  }
+
+  .comment {
+    font-size: 0.9em;
+  }
+
+  .avatar {
+    max-height: 20%;
+    opacity: 1;
+    z-index: 100;
+  }
+
+  .page_info {
+    max-height: 30px;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 3%;
+  }
+
+  .more-info {
+    color: $moreinfo-color;
+  }
+
+  img.background {
+    width: auto;
+    height: 60%;
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    opacity: 0.2;
+    z-index: 0;
+  }
+}

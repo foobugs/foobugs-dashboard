@@ -1,0 +1,15 @@
+<h1 class="title" data-bind="title"></h1>
+<div class="info_container">
+  <h3>
+    <img class="page_info" src="assets/facebook_posts/like.png"/><span data-bind='page_info.likes' class='likes'></span>
+    <img class="page_info" src="assets/facebook_posts/checkin.png"/><span data-bind='page_info.checkins' class='checkins'></span>
+    <img class="page_info" src="assets/facebook_posts/talkingabout.png"/><span data-bind='page_info.talking_about' class='talking_about'></span>
+  </h3>
+</div>
+<div class="comment-container">
+  <h3><img class="avatar" data-bind-src='current_comment.avatar'/><span data-bind='current_comment.name' class="name"></span></h3>
+  <p class="comment" data-bind='quote'></p>
+</div>
+
+<p class="more-info" data-bind="moreinfo"></p>
+

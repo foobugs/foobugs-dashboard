@@ -1,34 +1,45 @@
-#!/usr/bin/env ruby
-require 'net/http'
-require 'json'
+require 'koala'
 
-# this job will track some metrics of a facebook page
+def facebook_posts(page_name)
+  posts = @graph.get_connections(page_name, 'tagged',
+                                 {fields: ['message', 'from', 'picture', 'icon']},
+                                 {:use_ssl => true})
+  formatted_posts(posts[0..9])
+end
 
-# Config
-# ------
-# the fb id or username of the page you’re planning to track
-facebook_graph_username = ENV['FACEBOOK_GRAPH_USERNAME'] || 'foobugs'
+def graph_client(token, secret)
+  Koala::Facebook::API.new(token, secret)
+end
 
-SCHEDULER.every '1m', :first_in => 0 do |job|
-  http = Net::HTTP.new("graph.facebook.com")
-  response = http.request(Net::HTTP::Get.new("/#{facebook_graph_username}"))
-  if response.code != "200"
-    puts "facebook graph api error (status-code: #{response.code})\n#{response.body}"
-  else 
-    data = JSON.parse(response.body)
-    if data['likes']
-      if defined?(send_event) 
-        send_event('facebook_likes', current: data['likes'])
-        send_event('facebook_checkins', current: data['checkins'])
-        send_event('facebook_were_here_count', current: data['were_here_count'])
-        send_event('facebook_talking_about_count', current: data['talking_about_count'])
-      else
-        printf "Facebook likes: %d, checkins: %d, were_here_count: %d, talking_about_count: %d\n",
-          data['likes'],
-          data['checkins'],
-          data['were_here_count'],
-          data['talking_about_count']
-      end
-    end
+def formatted_posts(posts)
+  posts.each_with_object([]) do |post, arr|
+    arr << {
+      name: post['from']['name'],
+      body: post['message'] == "" ? "–" : post['message'],
+      avatar: post['picture'] || post['icon']
+    }
   end
+end
+
+def page_info(page_name)
+  info = @graph.get_object(page_name,
+                           {fields: ['likes', 'checkins', 'talking_about_count']},
+                           {:use_ssl => true})
+  {
+    likes: info['likes'],
+    checkins: info['checkins'],
+    talking_about: info['talking_about_count']
+  }
+end
+
+# Your page name (see graph.facebook.com/YOUR_PAGE_NAME)
+page_name = ''
+# Your access token
+access_token = ''
+# Your app secret
+app_secret = ''
+
+SCHEDULER.every '1m', :first_in => 0 do
+  @graph = Koala::Facebook::API.new(access_token, app_secret)
+  send_event('facebook_posts', {page_info: page_info(page_name), comments: facebook_posts(page_name)})
 end

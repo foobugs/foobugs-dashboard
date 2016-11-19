@@ -33,7 +33,7 @@ SCHEDULER.every '30s', :first_in => 0 do |job|
   
   s = yahoo_stockquote_symbols.join(',').upcase
   http = Net::HTTP.new("download.finance.yahoo.com")
-  response = http.request(Net::HTTP::Get.new("/d/quotes.csv?fb=nsac1&s=#{s}"))
+  response = http.request(Net::HTTP::Get.new("/d/quotes.csv?f=nsac1&s=#{s}"))
   
   if response.code != "200"
     puts "yahoo stock quote communication error (status-code: #{response.code})\n#{response.body}"
